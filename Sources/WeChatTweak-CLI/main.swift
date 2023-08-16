@@ -9,7 +9,7 @@ import PromiseKit
 import ArgumentParser
 
 struct Constant {
-    static let url = URL(string: "https://github.com/Sunnyyoung/WeChatTweak-macOS/releases/latest/download/WeChatTweak.framework.zip")!
+    static let url = URL(string: "https://github.com/JettChenT/WeChatTweak-macOS/releases/latest/download/WeChatTweak.framework.zip")!
 }
 
 struct App {
