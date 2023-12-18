@@ -3,8 +3,8 @@
 build:
 	swift package purge-cache
 	swift package clean
-	swift build -c release --arch arm64
-	cp /Users/jettchen/dev/wechat-rev/WeChatTweak-CLI/.build/arm64-apple-macosx/release/wechattweak-cli ./release/arm64
+	swift build -c release
+	cp ./.build/release/wechattweak-cli ./release/wechattweak-cli
 
 clean:
 	swift package purge-cache
