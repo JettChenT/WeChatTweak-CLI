@@ -23,23 +23,6 @@ jobs:
        run: |
          cp ./.build/release/wechattweak-cli ./wechattweak-cli
 
-     - name: Archive production artifacts
-       uses: actions/upload-artifact@v2
-       with:
-         name: wechattweak-cli-${{ matrix.platform }}
-         path: ./wechattweak-cli
-
-     - name: Create Release
-       id: create_release
-       uses: actions/create-release@v1
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-         tag_name: ${{ github.ref }}
-         release_name: Release ${{ github.ref }}
-         draft: false
-         prerelease: false
-
      - name: Upload Release Asset
        id: upload_release_asset
        uses: actions/upload-release-asset@v1
@@ -47,6 +30,6 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        with:
          upload_url: ${{ steps.create_release.outputs.upload_url }}
-         asset_path: ./release/wechattweak-cli
-         asset_name: wechattweak-cli
+         asset_path: ./wechattweak-cli
+         asset_name: wechattweak-cli-${{ matrix.platform }}
          asset_content_type: application/octet-stream
