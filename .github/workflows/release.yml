@@ -9,7 +9,8 @@ jobs:
    runs-on: ${{ matrix.os }}
    strategy:
      matrix:
-       os: [macos-latest, macos-11.0-arm64]
+       os: [macos-latest]
+       platform: [x64, arm64]
    steps:
      - name: Checkout code
        uses: actions/checkout@v2
@@ -20,13 +21,13 @@ jobs:
 
      - name: Copy binary
        run: |
-         cp ./.build/release/wechattweak-cli ./release/wechattweak-cli
+         cp ./.build/release/wechattweak-cli ./wechattweak-cli
 
      - name: Archive production artifacts
        uses: actions/upload-artifact@v2
        with:
-         name: wechattweak-cli
-         path: ./release/wechattweak-cli
+         name: wechattweak-cli-${{ matrix.platform }}
+         path: ./wechattweak-cli
 
      - name: Create Release
        id: create_release
