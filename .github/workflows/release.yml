@@ -21,15 +21,10 @@ jobs:
 
      - name: Copy binary
        run: |
-         cp ./.build/release/wechattweak-cli ./wechattweak-cli
+         cp ./.build/release/wechattweak-cli ./wechattweak-cli-${{ matrix.platform }}
 
-     - name: Upload Release Asset
-       id: upload_release_asset
-       uses: actions/upload-release-asset@v1
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     - name: Release
+       uses: softprops/action-gh-release@v1
        with:
-         upload_url: ${{ steps.create_release.outputs.upload_url }}
-         asset_path: ./wechattweak-cli
-         asset_name: wechattweak-cli-${{ matrix.platform }}
-         asset_content_type: application/octet-stream
+          files: wechattweak-cli-${{ matrix.platform }}
+          token: ${{ secrets.GITHUB_TOKEN }}
