@@ -14,11 +14,6 @@ jobs:
      - name: Checkout code
        uses: actions/checkout@v2
 
-     - name: Purge cache and clean
-       run: |
-         swift package purge-cache
-         swift package clean
-
      - name: Build
        run: |
          swift build -c release
