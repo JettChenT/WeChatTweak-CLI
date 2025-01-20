@@ -33,6 +33,7 @@ enum CLIError: LocalizedError {
     case downloading(Error)
     case insertDylib
     case executing(command: String, error: NSDictionary)
+    case frameworkNotFound(String)
 
     var errorDescription: String? {
         switch self {
@@ -44,12 +45,17 @@ enum CLIError: LocalizedError {
             return "Insert dylib failed"
         case let .executing(command, error):
             return "Execute command: \(command) failed: \(error)"
+        case let .frameworkNotFound(path):
+            return "Framework not found at path: \(path)"
         }
     }
 }
 
 struct Install: ParsableCommand {
     static var configuration = CommandConfiguration(abstract: "Install or upgrade tweak.")
+    
+    @Option(name: .long, help: "Path to local WeChatTweak.framework directory")
+    var frameworkPath: String?
 
     func run() throws {
         firstly {
@@ -57,9 +63,11 @@ struct Install: ParsableCommand {
         }.then {
             Command.cleanup()
         }.then {
-            Command.download()
-        }.then {
-            Command.unzip()
+            if let path = frameworkPath {
+                return Command.useLocalFramework(path: path)
+            } else {
+                return Command.download().then { Command.unzip() }
+            }
         }.then {
             Command.backup()
         }.then {

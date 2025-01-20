@@ -75,6 +75,34 @@ struct Command {
         }
     }
 
+    static func useLocalFramework(path: String) -> Promise<Void> {
+        print("------ Using Local Framework ------")
+        return Promise { seal in
+            do {
+                // Check if the framework exists and has the correct structure
+                let fm = FileManager.default
+                guard fm.fileExists(atPath: path),
+                      fm.fileExists(atPath: path.appending("/WeChatTweak")) else {
+                    throw CLIError.frameworkNotFound(path)
+                }
+                
+                // Remove existing framework if it exists
+                try? fm.removeItem(atPath: App.framework)
+                
+                // Copy the framework to the destination
+                try fm.copyItem(atPath: path, toPath: App.framework)
+                print("Copied framework from \(path)")
+                seal.fulfill(())
+            } catch {
+                if let cliError = error as? CLIError {
+                    seal.reject(cliError)
+                } else {
+                    seal.reject(CLIError.downloading(error))
+                }
+            }
+        }
+    }
+
     static func unzip() -> Promise<Void> {
         print("------ Unzip ------")
         return Command.execute(command: "rm -rf \(App.framework); unzip \(Temp.zip) -d \(App.macos)")
